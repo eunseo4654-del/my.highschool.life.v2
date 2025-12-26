@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eunseo's Archive</title>
+    <!-- 폰트 불러오기 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+KR:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === 디자인 (CSS) 영역 === */
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #050505;
+            color: #d4af37;
+            font-family: 'Noto Serif KR', serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 배경 효과 */
+        .background-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            z-index: -1;
+        }
+
+        /* 헤더 스타일 */
+        .header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            /* border-bottom은 메뉴 아래로 이동 */
+            margin-bottom: 40px;
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 3.5rem; /* 제목 길이 고려하여 약간 조정 */
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0px 0px 15px rgba(212, 175, 55, 0.4);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .sub-title {
+            font-size: 1.1rem;
+            color: #888;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        /* === 네비게이션 메뉴 (탭 버튼) === */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #888;
+            padding: 12px 30px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn:hover {
+            border-color: #d4af37;
+            color: #d4af37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-btn.active {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #d4af37;
+            color: #fcf6ba;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* 구분선 */
+        .divider {
+            width: 100px;
+            height: 1px;
+            background: radial-gradient(circle, #d4af37 0%, transparent 100%);
+            margin: 0 auto 60px;
+        }
+
+        /* 메인 컨텐츠 영역 */
+        #app {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+            padding-bottom: 100px;
+            min-height: 400px; /* 내용 없을 때도 공간 유지 */
+        }
+
+        /* 카드 섹션 스타일 */
+        .year-section {
+            position: relative;
+            border: 1px solid #d4af37;
+            padding: 40px;
+            background: rgba(10, 10, 10, 0.8);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease-out; /* 부드러운 전환 */
+        }
+
+        .year-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .year-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        /* 장식용 코너 */
+        .year-section::before, .year-section::after {
+            content: ''; position: absolute; width: 20px; height: 20px;
+            border: 2px solid #d4af37; transition: all 0.3s ease;
+        }
+        .year-section::before { top: -6px; left: -6px; border-right: 0; border-bottom: 0; }
+        .year-section::after { bottom: -6px; right: -6px; border-left: 0; border-top: 0; }
+
+        .year-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+            border-bottom: 2px solid #d4af37;
+            display: inline-block;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            color: #fcf6ba;
+        }
+
+        .content-item {
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 3px solid #b38728;
+            list-style: none;
+        }
+
+        .content-item h3 {
+            font-size: 1.5rem; color: #fff; margin-bottom: 5px;
+            font-family: 'Noto Serif KR', serif;
+        }
+        .content-item p { color: #ccc; font-size: 1rem; font-weight: 300; }
+
+        .footer {
+            text-align: center; padding: 50px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            color: #555; font-size: 0.9rem;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 2.2rem; }
+            .nav-btn { padding: 10px 15px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-overlay"></div>
+
+    <header class="header">
+        <!-- 은서님을 위한 타이틀 수정 완료 -->
+        <h1 class="main-title">Eunseo's Archive<br>of Highschool</h1>
+        <p class="sub-title">2021 - 2023 Collection</p>
+
+        <!-- 네비게이션 메뉴 추가 -->
+        <nav class="nav-container">
+            <button class="nav-btn active" onclick="changeTab('all')">Total View</button>
+            <button class="nav-btn" onclick="changeTab('academic')">Academic</button>
+            <button class="nav-btn" onclick="changeTab('festival')">Festival</button>
+            <button class="nav-btn" onclick="changeTab('contest')">Contest</button>
+        </nav>
+        <div class="divider"></div>
+    </header>
+
+    <main id="app">
+        <!-- JS가 내용을 채웁니다 -->
+    </main>
+
+    <footer class="footer">
+        <p>© 2024 Eunseo's Archive. All rights reserved.</p>
+    </footer>
+
+    <script>
+        /* === 데이터 관리 영역 (수정 가능) === */
+        
+        // 카테고리별로 데이터 분류: 'academic'(성적/학습), 'festival'(축제/행사), 'contest'(대회)
+        const database = {
+            // 1. 학업 및 성적 관련 데이터
+            'academic': [
+                {
+                    year: "2025 (1학년)",
+                    events: [
+                        { title: "자기주도학습 우수자 선정", description: "매일 아침 0교시 자습에 빠짐없이 참여하여 학년부장 선생님께 표창을 받았습니다." },
+                        { title: "영어 심화 탐구 반", description: "원어민 선생님과 함께하는 에세이 작성반에서 '환경 보호'를 주제로 글을 썼습니다." }
+                    ]
+                },
+                {
+                    year: "2027 (3학년)",
+                    events: [
+                        { title: "전교 석차 1등 달성", description: "꾸준한 노력 끝에 3학년 1학기 중간고사에서 전교 1등을 달성했습니다." },
+                        { title: "수능 응원단장", description: "수험생이지만 친구들의 사기 진작을 위해 학급 응원단장을 맡았습니다." }
+                    ]
+                }
+            ],
+
+            // 2. 축제 및 행사 관련 데이터
+            'festival': [
+                {
+                    year: "2025 (1학년)",
+                    events: [
+                        { title: "합창 대회 지휘자", description: "교내 합창 대회에서 반 친구들을 지휘하며 화합을 이끌어내어 은상을 수상했습니다." }
+                    ]
+                },
+                {
+                    year: "2026 (2학년)",
+                    events: [
+                        { title: "학교 축제 부스 운영", description: "'공포의 방탈출' 부스를 기획 및 운영하여 축제 인기 투표 1위를 차지했습니다." },
+                        { title: "체육대회 계주 대표", description: "반 대표로 400m 계주에 출전하여 역전 우승을 만들어냈습니다." }
+                    ]
+                }
+            ],
+
+            // 3. 대회 및 수상 관련 데이터
+            'contest': [
+                {
+                    year: "2025 (1학년)",
+                    events: [
+                        { title: "교내 백일장 장원", description: "가을을 주제로 한 시 부문에서 풍부한 감수성을 인정받아 장원을 수상했습니다." }
+                    ]
+                },
+                {
+                    year: "2026 (2학년)",
+                    events: [
+                        { title: "과학 탐구 토론 대회", description: "'AI 윤리'를 주제로 치열한 토론 끝에 금상을 수상했습니다." },
+                        { title: "영어 말하기 대회", description: "진로에 대한 확신을 영어로 스피치하여 심사위원들의 호평을 받았습니다." }
+                    ]
+                }
+            ]
+        };
+
+        // 'Total View'를 위해 모든 데이터를 합쳐서 연도순 정렬하는 함수
+        function getAllData() {
+            let allEvents = [];
+            // 모든 카테고리 데이터를 하나로 합침
+            Object.values(database).forEach(categoryData => {
+                categoryData.forEach(item => {
+                    allEvents.push(item);
+                });
+            });
+            // 연도순 정렬 (간단한 문자열 비교)
+            return allEvents.sort((a, b) => a.year.localeCompare(b.year));
+        }
+
+        /* === 기능 구현 영역 === */
+
+        const app = document.getElementById('app');
+        const btns = document.querySelectorAll('.nav-btn');
+
+        // 탭 변경 함수
+        function changeTab(category) {
+            // 1. 버튼 스타일 초기화 및 활성화
+            btns.forEach(btn => btn.classList.remove('active'));
+            // 클릭된 버튼 찾아서 active 클래스 추가 (이벤트 객체가 아닌 속성으로 처리)
+            event.target.classList.add('active');
+
+            // 2. 보여줄 데이터 결정
+            let dataToShow = [];
+            if (category === 'all') {
+                dataToShow = getAllData();
+            } else {
+                dataToShow = database[category];
+            }
+
+            // 3. 화면 다시 그리기
+            render(dataToShow);
+        }
+
+        // 화면 렌더링 함수
+        function render(dataList) {
+            app.innerHTML = ''; // 기존 내용 지우기
+
+            if (!dataList || dataList.length === 0) {
+                app.innerHTML = '<div style="text-align:center; padding:50px;">기록된 내용이 없습니다.</div>';
+                return;
+            }
+
+            dataList.forEach((data, index) => {
+                const section = document.createElement('section');
+                section.className = 'year-section';
+                // 애니메이션 딜레이
+                section.style.transitionDelay = (index * 0.1) + 's';
+
+                let eventsHtml = '';
+                data.events.forEach(event => {
+                    eventsHtml += `
+                        <li class="content-item">
+                            <h3>${event.title}</h3>
+                            <p>${event.description}</p>
+                        </li>
+                    `;
+                });
+
+                section.innerHTML = `
+                    <h2 class="year-title">${data.year}</h2>
+                    <ul>${eventsHtml}</ul>
+                `;
+
+                app.appendChild(section);
+            });
+
+            // 렌더링 후 애니메이션 적용 (약간의 시간차 필요)
+            setTimeout(() => {
+                document.querySelectorAll('.year-section').forEach(sec => {
+                    sec.classList.add('visible');
+                });
+            }, 50);
+        }
+
+        // 초기 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            render(getAllData()); // 처음엔 모든 데이터 보여주기
+        });
+
+    </script>
+</body>
+</html>
